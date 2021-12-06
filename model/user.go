@@ -8,3 +8,9 @@ type User struct {
 	Token    string `gorm:"token" json:"token"`                           // 登录密钥
 	Machine  string `gorm:"machine" json:"machine"`                       // 机器码
 }
+
+type UserMachine struct {
+	GlobalModel
+	UserId  uint   `json:"user_id"` // 用户id
+	Machine string `json:"machine"` // 机器码
+}

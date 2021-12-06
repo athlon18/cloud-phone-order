@@ -12,3 +12,7 @@ func ExternalRouter(router *gin.RouterGroup) {
 	router.POST("external/order/:code/update/:orderId", controller.UpdateOrder) // 更新订单
 	router.POST("external/test/:code", controller.Test)                         // 测试
 }
+
+func ExternalRouterV2(router *gin.RouterGroup) {
+	router.POST("external/login", controller.ExternalLoginRegister) // 机器码登录绑定
+}

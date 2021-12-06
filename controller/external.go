@@ -170,3 +170,36 @@ func Test(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, util.Result().SetSuccess(user))
 
 }
+
+type ExternalLoginRegisterExample struct {
+	MachineCode string `json:"machine_code" example:"23333333333"`
+	Name        string `json:"username"`
+	Password    string `json:"password"`
+}
+
+// ExternalLoginRegister
+// @Tags 接口
+// @Summary 登录绑定机器码
+// @Description 登录绑定机器码
+// @Accept  json
+// @Produce  json
+// @Param machine_code body BindMachineExample true "机器码"
+// @Success 200 {object} object{success=bool,code=int, message=string}
+// @Router /api/v2/external/login/register [post]
+func ExternalLoginRegister(ctx *gin.Context) {
+	user := ExternalLoginRegisterExample{}
+	if err := ctx.ShouldBindJSON(&user); err != nil {
+		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
+	}
+
+	if user.MachineCode == "" {
+		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, "机器码不能为空! ", nil))
+	}
+
+	data, err := service.ExternalLoginRegister(user.Name, util.EncryptSha256(user.Password), user.MachineCode)
+	if err != nil {
+		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
+	} else {
+		ctx.JSON(http.StatusOK, util.Result().SetSuccess(data))
+	}
+}

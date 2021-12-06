@@ -32,6 +32,7 @@ func InitRouter() *gin.Engine {
 	api := router.Group("api/")
 	{
 		IndexRouter(api)
+		IndexV2Router(api)
 	}
 	return router
 }
@@ -48,4 +49,10 @@ func IndexRouter(api *gin.RouterGroup) {
 	ExternalRouter(v1)
 	UploadRouter(v1)
 	FileRouter(v1)
+}
+
+func IndexV2Router(api *gin.RouterGroup) {
+	// V2版本
+	v2 := api.Group("v2/")
+	ExternalRouterV2(v2)
 }

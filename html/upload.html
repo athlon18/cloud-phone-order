@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>文件上传</title>
+</head>
+<body>
+<form action="/api/v1/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="f1">
+    <br>
+    <label>
+        是否启用：<input type="checkbox" name="status" checked>
+    </label>
+    <br>
+    <input type="submit" value="上传">
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>地址</th>
+        <th>启用</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {{range $k, $v := .data}}
+    <tr>
+        <td>{{$v.Name}}</td>
+        <td>{{$v.File}}</td>
+        <td>{{$v.Status}}</td>
+    </tr>
+    {{end}}
+
+    </tbody>
+</table>
+</body>
+</html>

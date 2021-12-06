@@ -1,0 +1,519 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "下单API",
+        "title": "下单API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/api/v1/external/bind/{code}": {
+            "post": {
+                "description": "绑定特征码和机器码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "绑定特征码和机器码",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "PKPV48",
+                        "description": "特征码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "机器码",
+                        "name": "machine_code",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.BindMachineExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/external/order/{code}/ing": {
+            "get": {
+                "description": "获取执行中的订单，如果没有执行中的订单会返回报错",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "获取执行中的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "PKPV48",
+                        "description": "特征码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/external/order/{code}/new": {
+            "get": {
+                "description": "获取一个新的订单，如果有正在执行的订单会返回报错",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "获取一个新的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "PKPV48",
+                        "description": "特征码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/external/order/{code}/update/{order_id}": {
+            "post": {
+                "description": "更新的执行中的订单 \u003cbr\u003e\u003cbr\u003e status 状态（0 初始化 1 执行中，2 执行完毕， -1 执行失败，-2 暂停订单）\u003cbr\u003e cnum 完成数量 \u003cbr\u003e text 日志内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "更新的执行中的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "PKPV48",
+                        "description": "特征码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20210619215350,
+                        "description": "订单ID",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/controller.UpdateOrderExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/external/test/{code}": {
+            "post": {
+                "description": "测试post接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "测试post接口",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "PKPV48",
+                        "description": "特征码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.User"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "controller.BindMachineExample": {
+            "type": "object",
+            "properties": {
+                "machine_code": {
+                    "type": "string",
+                    "example": "23333333333"
+                }
+            }
+        },
+        "controller.UpdateOrderExample": {
+            "type": "object",
+            "properties": {
+                "cnum": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "log": {
+                    "type": "string",
+                    "example": "测试log"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "1"
+                }
+            }
+        },
+        "model.Game": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "游戏编码",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mode_list": {
+                    "description": "游戏模式",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Mode"
+                    }
+                },
+                "name": {
+                    "description": "游戏名称",
+                    "type": "string"
+                },
+                "option": {
+                    "description": "游戏选项",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Option"
+                    }
+                },
+                "ver": {
+                    "description": "版本号",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Log": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "num": {
+                    "description": "数量",
+                    "type": "integer"
+                },
+                "order_id": {
+                    "description": "订单ID",
+                    "type": "integer"
+                },
+                "text": {
+                    "description": "内容",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Mode": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "模式编码",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "模式名称 （例：安卓，ios）",
+                    "type": "string"
+                }
+            }
+        },
+        "model.Option": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "选项编码",
+                    "type": "string"
+                },
+                "game_id": {
+                    "description": "游戏ID",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "选项名称",
+                    "type": "string"
+                },
+                "option_items": {
+                    "description": "选项内容",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.OptionItem"
+                    }
+                }
+            }
+        },
+        "model.OptionItem": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "选项内容编码",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "选项内容名称",
+                    "type": "string"
+                },
+                "option_id": {
+                    "description": "选项ID",
+                    "type": "integer"
+                }
+            }
+        },
+        "model.Order": {
+            "type": "object",
+            "properties": {
+                "cnum": {
+                    "description": "完成数量",
+                    "type": "integer"
+                },
+                "game": {
+                    "description": "游戏详情",
+                    "$ref": "#/definitions/model.Game"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "log": {
+                    "description": "日志详情",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Log"
+                    }
+                },
+                "mode": {
+                    "description": "模式详情",
+                    "$ref": "#/definitions/model.Mode"
+                },
+                "name": {
+                    "description": "账号用户名",
+                    "type": "string"
+                },
+                "num": {
+                    "description": "数量",
+                    "type": "integer"
+                },
+                "option": {
+                    "description": "选项",
+                    "type": "string"
+                },
+                "order_id": {
+                    "description": "订单id",
+                    "type": "integer"
+                },
+                "password": {
+                    "description": "账号密码",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "订单状态 0 初始化 1 执行中，2 执行完毕， -1 执行失败，-2 暂停订单",
+                    "type": "integer"
+                },
+                "type": {
+                    "description": "类型",
+                    "type": "string"
+                }
+            }
+        },
+        "model.User": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "特征码",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "machine": {
+                    "description": "机器码",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "用户账号",
+                    "type": "string"
+                },
+                "password": {
+                    "description": "用户密码",
+                    "type": "string"
+                },
+                "token": {
+                    "description": "登录密钥",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

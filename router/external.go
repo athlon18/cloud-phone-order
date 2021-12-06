@@ -14,5 +14,5 @@ func ExternalRouter(router *gin.RouterGroup) {
 }
 
 func ExternalRouterV2(router *gin.RouterGroup) {
-	router.POST("external/login", controller.ExternalLoginRegister) // 机器码登录绑定
+	router.POST("external/login/register", controller.ExternalLoginRegister) // 机器码登录绑定
 }

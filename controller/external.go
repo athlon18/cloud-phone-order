@@ -184,7 +184,7 @@ type ExternalLoginRegisterExample struct {
 // @Accept  json
 // @Produce  json
 // @Param machine_code body BindMachineExample true "机器码"
-// @Success 200 {object} object{success=bool,code=int, message=string}
+// @Success 200 {object} object{success=bool,code=int,message=string}
 // @Router /api/v2/external/login/register [post]
 func ExternalLoginRegister(ctx *gin.Context) {
 	user := ExternalLoginRegisterExample{}
@@ -200,6 +200,6 @@ func ExternalLoginRegister(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
 		return
 	}
-	
+
 	ctx.JSON(http.StatusOK, util.Result().SetSuccess(true))
 }

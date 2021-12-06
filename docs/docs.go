@@ -300,6 +300,58 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/api/v2/external/login/register": {
+            "post": {
+                "description": "登录绑定机器码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "接口"
+                ],
+                "summary": "登录绑定机器码",
+                "parameters": [
+                    {
+                        "description": "机器码",
+                        "name": "machine_code",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.BindMachineExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -378,6 +430,10 @@ var doc = `{
                 },
                 "order_id": {
                     "description": "订单ID",
+                    "type": "integer"
+                },
+                "status": {
+                    "description": "状态",
                     "type": "integer"
                 },
                 "text": {

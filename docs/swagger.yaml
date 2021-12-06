@@ -53,6 +53,9 @@ definitions:
       order_id:
         description: 订单ID
         type: integer
+      status:
+        description: 状态
+        type: integer
       text:
         description: 内容
         type: string
@@ -335,6 +338,37 @@ paths:
                   type: boolean
               type: object
       summary: 测试post接口
+      tags:
+      - 接口
+  /api/v2/external/login/register:
+    post:
+      consumes:
+      - application/json
+      description: 登录绑定机器码
+      parameters:
+      - description: 机器码
+        in: body
+        name: machine_code
+        required: true
+        schema:
+          $ref: '#/definitions/controller.BindMachineExample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+                success:
+                  type: boolean
+              type: object
+      summary: 登录绑定机器码
       tags:
       - 接口
 swagger: "2.0"

@@ -196,10 +196,10 @@ func ExternalLoginRegister(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, "机器码不能为空! ", nil))
 	}
 
-	data, err := service.ExternalLoginRegister(user.Name, util.EncryptSha256(user.Password), user.MachineCode)
-	if err != nil {
+	if err := service.ExternalLoginRegister(user.Name, util.EncryptSha256(user.Password), user.MachineCode); err != nil {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
-	} else {
-		ctx.JSON(http.StatusOK, util.Result().SetSuccess(data))
+		return
 	}
+	
+	ctx.JSON(http.StatusOK, util.Result().SetSuccess(true))
 }

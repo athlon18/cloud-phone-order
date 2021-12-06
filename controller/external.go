@@ -203,3 +203,29 @@ func ExternalLoginRegister(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, util.Result().SetSuccess(true))
 }
+
+// ExternalRegister
+// @Tags V2接口
+// @Summary 服务发现
+// @Description 服务发现(机器) 初始化时候调用
+// @Accept  json
+// @Produce  json
+// @Param machine_code body ExternalLoginRegisterExample true "机器码"
+// @Success 200 {object} object{success=bool,code=int,message=string}
+// @Router /api/v2/external/login/register [post]
+func ExternalRegister() {
+
+}
+
+//ExternalDeregister
+// @Tags V2接口
+// @Summary 服务注销
+// @Description 服务注销(机器) 关闭时候调用
+// @Accept  json
+// @Produce  json
+// @Param machine_code body ExternalLoginRegisterExample true "机器码"
+// @Success 200 {object} object{success=bool,code=int,message=string}
+// @Router /api/v2/external/login/register [post]
+
+
+//ExternalHealth

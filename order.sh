@@ -2,4 +2,4 @@
 git pull
 killall order
 go build
-nohup ./order &
+nohup ./order & tail -f nohup.out

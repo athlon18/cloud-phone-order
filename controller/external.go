@@ -14,7 +14,7 @@ type BindMachineExample struct {
 }
 
 // BindMachine
-// @Tags 接口
+// @Tags V1接口
 // @Summary 绑定特征码和机器码
 // @Description 绑定特征码和机器码
 // @Accept  json
@@ -54,7 +54,7 @@ func BindMachine(ctx *gin.Context) {
 }
 
 // GetNewOrder
-// @Tags 接口
+// @Tags V1接口
 // @Summary 获取一个新的订单
 // @Description 获取一个新的订单，如果有正在执行的订单会返回报错
 // @Accept  json
@@ -82,7 +82,7 @@ func GetNewOrder(ctx *gin.Context) {
 }
 
 // GetIngOrder
-// @Tags 接口
+// @Tags V1接口
 // @Summary 获取执行中的订单
 // @Description 获取执行中的订单，如果没有执行中的订单会返回报错
 // @Accept  json
@@ -115,7 +115,7 @@ type UpdateOrderExample struct {
 }
 
 // UpdateOrder
-// @Tags 接口
+// @Tags V1接口
 // @Summary 更新的执行中的订单
 // @Description 更新的执行中的订单 <br><br> status 状态（0 初始化 1 执行中，2 执行完毕， -1 执行失败，-2 暂停订单）<br> cnum 完成数量 <br> text 日志内容
 // @Accept  json
@@ -153,7 +153,7 @@ func UpdateOrder(ctx *gin.Context) {
 }
 
 // Test
-// @Tags 接口
+// @Tags V1接口
 // @Summary 测试post接口
 // @Description 测试post接口
 // @Accept  json
@@ -178,7 +178,7 @@ type ExternalLoginRegisterExample struct {
 }
 
 // ExternalLoginRegister
-// @Tags 接口
+// @Tags V2接口
 // @Summary 登录绑定机器码
 // @Description 登录绑定机器码
 // @Accept  json

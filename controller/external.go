@@ -183,7 +183,7 @@ type ExternalLoginRegisterExample struct {
 // @Description 登录绑定机器码
 // @Accept  json
 // @Produce  json
-// @Param machine_code body BindMachineExample true "机器码"
+// @Param machine_code body ExternalLoginRegisterExample true "机器码"
 // @Success 200 {object} object{success=bool,code=int,message=string}
 // @Router /api/v2/external/login/register [post]
 func ExternalLoginRegister(ctx *gin.Context) {

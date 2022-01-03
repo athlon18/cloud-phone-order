@@ -59,6 +59,22 @@ func GetNewOrder(user model.User) (model.Order, error) {
 	return order, nil
 }
 
+func GetMachineNewOrder(machine model.UserMachine) (order model.Order, err error) {
+	if err = db.DB.Model(model.Order{}).
+		Preload("Mode").
+		Preload("Game").
+		Where("user_id  = ? and status = 0 and machine = ?", machine.UserId, machine.Machine).
+		Where("NOT EXISTS (SELECT 1 FROM orders where `status` = 1 and user_id = ? and machine = ?)", machine.UserId, machine.Machine).First(&order).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return order, errors.New("当前有执行的订单，或者没有新的订单，无法执行新订单！")
+		}
+	}
+	if rows := db.DB.Model(model.Order{}).Where("id = ?", order.ID).Update("status", 1).RowsAffected; rows == 0 {
+		return order, errors.New("订单状态更新异常！")
+	}
+	return order, nil
+}
+
 func GetIngOrder(user model.User) (model.Order, error) {
 	order := model.Order{}
 	if err := db.DB.Model(model.Order{}).
@@ -70,6 +86,18 @@ func GetIngOrder(user model.User) (model.Order, error) {
 		}
 	}
 	return order, nil
+}
+
+func GetMachineIngOrder(machine model.UserMachine) (order model.Order, err error) {
+	if err = db.DB.Model(model.Order{}).
+		Preload("Mode").
+		Preload("Game").
+		Where("`status` = 1 and user_id = ? and machine = ?", machine.UserId, machine.Machine).First(&order).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return order, errors.New("当前没有执行的订单，请获取新订单！")
+		}
+	}
+	return
 }
 
 func GetOrderByOrderID(orderId int64) (model.Order, error) {

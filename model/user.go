@@ -11,6 +11,8 @@ type User struct {
 
 type UserMachine struct {
 	GlobalModel
-	UserId  uint   `json:"user_id"` // 用户id
-	Machine string `json:"machine"` // 机器码
+	UserId    uint   `json:"user_id" gorm:"index"`     // 用户id
+	Machine   string `json:"machine" gorm:"unique"`    // 用户机器码
+	MachineId uint   `json:"machine_id" gorm:"unique"` // 机器码ID
+	Tag       string `json:"tag"`                      // 标签
 }

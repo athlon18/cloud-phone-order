@@ -22,6 +22,13 @@ func GetCodeInfo(code string) (model.User, error) {
 	return user, nil
 }
 
+func GetIDInfo(id uint) (user model.User, err error) {
+	if err = db.DB.Model(model.User{}).Where("id = ?", id).First(&user).Error; err != nil {
+		return user, errors.New("用户不存在，请重试！")
+	}
+	return user, nil
+}
+
 func UpdateUserByCode(user model.User) error {
 	if err := db.DB.Model(model.User{}).Where("code = ?", user.Code).Updates(&user).Error; err != nil {
 		return err

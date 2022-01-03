@@ -5,6 +5,24 @@ definitions:
         example: "23333333333"
         type: string
     type: object
+  controller.ExternalLoginRegisterExample:
+    properties:
+      machine_code:
+        example: "23333333333"
+        type: string
+      password:
+        example: qianyi
+        type: string
+      username:
+        example: admin
+        type: string
+    type: object
+  controller.ExternalRegisterExample:
+    properties:
+      machine_code:
+        example: "23333333333"
+        type: string
+    type: object
   controller.UpdateOrderExample:
     properties:
       cnum:
@@ -119,6 +137,9 @@ definitions:
         items:
           $ref: '#/definitions/model.Log'
         type: array
+      machine:
+        description: 绑定机器码
+        type: string
       mode:
         $ref: '#/definitions/model.Mode'
         description: 模式详情
@@ -164,6 +185,23 @@ definitions:
         description: 登录密钥
         type: string
     type: object
+  model.UserMachine:
+    properties:
+      id:
+        type: integer
+      machine:
+        description: 用户机器码
+        type: string
+      machine_id:
+        description: 机器码ID
+        type: integer
+      tag:
+        description: 标签
+        type: string
+      user_id:
+        description: 用户id
+        type: integer
+    type: object
 info:
   contact: {}
   description: 下单API
@@ -204,7 +242,7 @@ paths:
               type: object
       summary: 绑定特征码和机器码
       tags:
-      - 接口
+      - V1接口
   /api/v1/external/order/{code}/ing:
     get:
       consumes:
@@ -235,7 +273,7 @@ paths:
               type: object
       summary: 获取执行中的订单
       tags:
-      - 接口
+      - V1接口
   /api/v1/external/order/{code}/new:
     get:
       consumes:
@@ -266,7 +304,7 @@ paths:
               type: object
       summary: 获取一个新的订单
       tags:
-      - 接口
+      - V1接口
   /api/v1/external/order/{code}/update/{order_id}:
     post:
       consumes:
@@ -308,7 +346,7 @@ paths:
               type: object
       summary: 更新的执行中的订单
       tags:
-      - 接口
+      - V1接口
   /api/v1/external/test/{code}:
     post:
       consumes:
@@ -339,7 +377,7 @@ paths:
               type: object
       summary: 测试post接口
       tags:
-      - 接口
+      - V1接口
   /api/v2/external/login/register:
     post:
       consumes:
@@ -351,7 +389,40 @@ paths:
         name: machine_code
         required: true
         schema:
-          $ref: '#/definitions/controller.BindMachineExample'
+          $ref: '#/definitions/controller.ExternalLoginRegisterExample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/model.UserMachine'
+                message:
+                  type: string
+                success:
+                  type: boolean
+              type: object
+      summary: 登录绑定机器码 返回用户机器码
+      tags:
+      - V2接口
+  /api/v2/external/machine/deregister:
+    post:
+      consumes:
+      - application/json
+      description: 服务注销(机器) 关闭时候调用
+      parameters:
+      - description: 机器码
+        in: body
+        name: machine_code
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ExternalRegisterExample'
       produces:
       - application/json
       responses:
@@ -368,7 +439,173 @@ paths:
                 success:
                   type: boolean
               type: object
-      summary: 登录绑定机器码
+      summary: 机器服务注销
       tags:
-      - 接口
+      - V2接口
+  /api/v2/external/machine/health:
+    post:
+      consumes:
+      - application/json
+      description: 机器心跳包
+      parameters:
+      - description: 机器码
+        in: body
+        name: machine_code
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ExternalRegisterExample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+                success:
+                  type: boolean
+              type: object
+      summary: 机器心跳包
+      tags:
+      - V2接口
+  /api/v2/external/machine/register:
+    post:
+      consumes:
+      - application/json
+      description: 服务发现(机器) 初始化时候调用
+      parameters:
+      - description: 机器码
+        in: body
+        name: machine_code
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ExternalRegisterExample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                message:
+                  type: string
+                success:
+                  type: boolean
+              type: object
+      summary: 机器服务发现
+      tags:
+      - V2接口
+  /api/v2/external/order/{code}/ing:
+    get:
+      consumes:
+      - application/json
+      description: 获取执行中的订单，如果没有执行中的订单会返回报错
+      parameters:
+      - default: 085ebd3b-0c6d-469e-9cb5-f9971d81d223
+        description: 用户机器码
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/model.Order'
+                success:
+                  type: boolean
+              type: object
+      summary: 获取执行中的订单
+      tags:
+      - V2接口
+  /api/v2/external/order/{code}/new:
+    get:
+      consumes:
+      - application/json
+      description: 获取一个新的订单，如果有正在执行的订单会返回报错
+      parameters:
+      - default: 085ebd3b-0c6d-469e-9cb5-f9971d81d223
+        description: 用户机器码
+        in: path
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/model.Order'
+                success:
+                  type: boolean
+              type: object
+      summary: 获取一个新的订单
+      tags:
+      - V2接口
+  /api/v2/external/order/{code}/update/{order_id}:
+    post:
+      consumes:
+      - application/json
+      description: 更新的执行中的订单 <br><br> status 状态（0 初始化 1 执行中，2 执行完毕， -1 执行失败，-2 暂停订单）<br> cnum 完成数量 <br> text 日志内容
+      parameters:
+      - default: 085ebd3b-0c6d-469e-9cb5-f9971d81d223
+        description: 用户机器码
+        in: path
+        name: code
+        required: true
+        type: string
+      - default: 20210619215350
+        description: 订单ID
+        in: path
+        name: order_id
+        required: true
+        type: integer
+      - description: 请求参数
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/controller.UpdateOrderExample'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - type: object
+            - properties:
+                code:
+                  type: integer
+                data:
+                  $ref: '#/definitions/model.Order'
+                success:
+                  type: boolean
+              type: object
+      summary: 更新的执行中的订单
+      tags:
+      - V2接口
 swagger: "2.0"

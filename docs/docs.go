@@ -34,7 +34,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V1接口"
                 ],
                 "summary": "绑定特征码和机器码",
                 "parameters": [
@@ -91,7 +91,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V1接口"
                 ],
                 "summary": "获取执行中的订单",
                 "parameters": [
@@ -142,7 +142,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V1接口"
                 ],
                 "summary": "获取一个新的订单",
                 "parameters": [
@@ -193,7 +193,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V1接口"
                 ],
                 "summary": "更新的执行中的订单",
                 "parameters": [
@@ -260,7 +260,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V1接口"
                 ],
                 "summary": "测试post接口",
                 "parameters": [
@@ -311,9 +311,9 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "接口"
+                    "V2接口"
                 ],
-                "summary": "登录绑定机器码",
+                "summary": "登录绑定机器码 返回用户机器码",
                 "parameters": [
                     {
                         "description": "机器码",
@@ -321,7 +321,62 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.BindMachineExample"
+                            "$ref": "#/definitions/controller.ExternalLoginRegisterExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.UserMachine"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/external/machine/deregister": {
+            "post": {
+                "description": "服务注销(机器) 关闭时候调用",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "机器服务注销",
+                "parameters": [
+                    {
+                        "description": "机器码",
+                        "name": "machine_code",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.ExternalRegisterExample"
                         }
                     }
                 ],
@@ -352,10 +407,309 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/api/v2/external/machine/health": {
+            "post": {
+                "description": "机器心跳包",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "机器心跳包",
+                "parameters": [
+                    {
+                        "description": "机器码",
+                        "name": "machine_code",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.ExternalRegisterExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/external/machine/register": {
+            "post": {
+                "description": "服务发现(机器) 初始化时候调用",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "机器服务发现",
+                "parameters": [
+                    {
+                        "description": "机器码",
+                        "name": "machine_code",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.ExternalRegisterExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/external/order/{code}/ing": {
+            "get": {
+                "description": "获取执行中的订单，如果没有执行中的订单会返回报错",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "获取执行中的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "085ebd3b-0c6d-469e-9cb5-f9971d81d223",
+                        "description": "用户机器码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/external/order/{code}/new": {
+            "get": {
+                "description": "获取一个新的订单，如果有正在执行的订单会返回报错",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "获取一个新的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "085ebd3b-0c6d-469e-9cb5-f9971d81d223",
+                        "description": "用户机器码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v2/external/order/{code}/update/{order_id}": {
+            "post": {
+                "description": "更新的执行中的订单 \u003cbr\u003e\u003cbr\u003e status 状态（0 初始化 1 执行中，2 执行完毕， -1 执行失败，-2 暂停订单）\u003cbr\u003e cnum 完成数量 \u003cbr\u003e text 日志内容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "V2接口"
+                ],
+                "summary": "更新的执行中的订单",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "085ebd3b-0c6d-469e-9cb5-f9971d81d223",
+                        "description": "用户机器码",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "default": 20210619215350,
+                        "description": "订单ID",
+                        "name": "order_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "请求参数",
+                        "name": "body",
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/controller.UpdateOrderExample"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "type": "object"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/model.Order"
+                                        },
+                                        "success": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "controller.BindMachineExample": {
+            "type": "object",
+            "properties": {
+                "machine_code": {
+                    "type": "string",
+                    "example": "23333333333"
+                }
+            }
+        },
+        "controller.ExternalLoginRegisterExample": {
+            "type": "object",
+            "properties": {
+                "machine_code": {
+                    "type": "string",
+                    "example": "23333333333"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "qianyi"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "admin"
+                }
+            }
+        },
+        "controller.ExternalRegisterExample": {
             "type": "object",
             "properties": {
                 "machine_code": {
@@ -526,6 +880,10 @@ var doc = `{
                         "$ref": "#/definitions/model.Log"
                     }
                 },
+                "machine": {
+                    "description": "绑定机器码",
+                    "type": "string"
+                },
                 "mode": {
                     "description": "模式详情",
                     "$ref": "#/definitions/model.Mode"
@@ -585,6 +943,30 @@ var doc = `{
                 "token": {
                     "description": "登录密钥",
                     "type": "string"
+                }
+            }
+        },
+        "model.UserMachine": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "machine": {
+                    "description": "用户机器码",
+                    "type": "string"
+                },
+                "machine_id": {
+                    "description": "机器码ID",
+                    "type": "integer"
+                },
+                "tag": {
+                    "description": "标签",
+                    "type": "string"
+                },
+                "user_id": {
+                    "description": "用户id",
+                    "type": "integer"
                 }
             }
         }

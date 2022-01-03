@@ -16,4 +16,5 @@ type Order struct {
 	Mode     Mode   `gorm:"foreignKey:mode_id;references:id" json:"mode,omitempty"`       // 模式详情
 	Game     Game   `gorm:"foreignKey:game_id;references:id" json:"game,omitempty"`       // 游戏详情
 	Log      []Log  `gorm:"foreignKey:order_id;references:order_id" json:"log,omitempty"` // 日志详情
+	Machine  string `json:"machine" gorm:"index"`                                         // 绑定机器码
 }

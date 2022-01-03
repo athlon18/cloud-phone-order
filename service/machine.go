@@ -7,7 +7,11 @@ import (
 )
 
 func ExternalRegister(machineCode string) error {
-	return db.DB.Model(model.Machine{}).Assign(model.Machine{MachineCode: machineCode}).FirstOrCreate(&model.Machine{MachineCode: machineCode}).Error
+	return db.DB.Model(model.Machine{}).
+		Where("machine_code = ?", machineCode).
+		Assign(model.Machine{MachineCode: machineCode}).
+		FirstOrCreate(&model.Machine{MachineCode: machineCode}).
+		Error
 }
 
 func ExternalDeregister(machineCode string) (int64, error) {

@@ -61,7 +61,7 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 	// 检测machine id 归属
 	if oldUserMachine.UserId != user.ID {
 		tx.Rollback()
-		return userMachine, errors.New("此机器已被其他用户绑定！")
+		return oldUserMachine, errors.New("此机器已被其他用户绑定！")
 	}
 
 	//处理 之前冗余数据
@@ -78,7 +78,7 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 		return
 	}
 
-	return userMachine, tx.Commit().Error
+	return oldUserMachine, tx.Commit().Error
 }
 
 func GetMachineInfo(code string) (machineData model.UserMachine, err error) {

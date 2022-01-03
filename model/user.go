@@ -16,3 +16,9 @@ type UserMachine struct {
 	MachineId uint   `json:"machine_id" gorm:"unique"` // 机器码ID
 	Tag       string `json:"tag"`                      // 标签
 }
+
+func (u UserMachine) Public() map[string]interface{} {
+	return map[string]interface{}{
+		"machine": u.Machine,
+	}
+}

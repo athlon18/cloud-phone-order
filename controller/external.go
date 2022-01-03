@@ -204,7 +204,7 @@ func ExternalLoginRegister(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, util.Result().SetSuccess(userMachine))
+	ctx.JSON(http.StatusOK, util.Result().SetSuccess(userMachine.Public()))
 }
 
 type ExternalRegisterExample struct {

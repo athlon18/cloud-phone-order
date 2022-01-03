@@ -44,14 +44,41 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 		Machine:   uuid.NewV4().String(),
 		MachineId: machineData.ID,
 	}
-	machineDB := db.DB.Model(model.UserMachine{}).Where("machine_id = ? and user_id = ?", machineData.ID, user.ID)
-	if err = machineDB.First(map[string]interface{}{}).Error; err != nil {
+	tx := db.DB.Begin()
+	oldUserMachine := model.UserMachine{}
+	machineDB := tx.Model(model.UserMachine{}).Where("machine_id = ?", machineData.ID)
+	if err = machineDB.First(&oldUserMachine).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return userMachine, db.DB.Model(model.UserMachine{}).Create(&userMachine).Error
+			if err = tx.Model(model.UserMachine{}).Create(&userMachine).Error; err != nil {
+				tx.Rollback()
+				return
+			}
+			return userMachine, tx.Commit().Error
 		}
+		tx.Rollback()
+		return
+	}
+	// 检测machine id 归属
+	if oldUserMachine.UserId != user.ID {
+		tx.Rollback()
+		return userMachine, errors.New("此机器已被其他用户绑定！")
 	}
 
-	return userMachine, machineDB.Update("updated_at", time.Now()).Error
+	//处理 之前冗余数据
+	if err = tx.Model(model.Order{}).
+		Where("machine = ?", oldUserMachine.Machine).
+		Update("machine", userMachine.Machine).Error; err != nil {
+		tx.Rollback()
+		return
+	}
+
+	// 更新时间戳
+	if err = machineDB.Update("updated_at", time.Now()).Error; err != nil {
+		tx.Rollback()
+		return
+	}
+
+	return userMachine, tx.Commit().Error
 }
 
 func GetMachineInfo(code string) (machineData model.UserMachine, err error) {

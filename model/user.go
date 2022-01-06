@@ -22,3 +22,16 @@ func (u UserMachine) Public() map[string]interface{} {
 		"machine": u.Machine,
 	}
 }
+
+type UserMachineShow struct {
+	UpdatedModel
+	UserId      uint        `json:"user_id"`                                                // 用户id
+	Machine     string      `json:"machine"`                                                // 用户机器码
+	MachineId   uint        `json:"-"`                                                      // 机器码ID
+	MachineInfo MachineShow `json:"machineInfo" gorm:"foreignkey:id;references:machine_id"` //
+	Tag         string      `json:"tag"`
+}
+
+func (UserMachineShow) TableName() string {
+	return "user_machines"
+}

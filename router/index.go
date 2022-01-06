@@ -49,6 +49,7 @@ func IndexRouter(api *gin.RouterGroup) {
 	ExternalRouter(v1)
 	UploadRouter(v1)
 	FileRouter(v1)
+	MachineRouter(v1)
 }
 
 func IndexV2Router(api *gin.RouterGroup) {

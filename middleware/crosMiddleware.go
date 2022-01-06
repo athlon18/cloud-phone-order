@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 //跨域处理
@@ -12,8 +13,7 @@ func CrosMiddleware(Ctx *gin.Context) {
 	Ctx.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Cookie, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With, Set-Cookie")
 	Ctx.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
 	if Ctx.Request.Method == "OPTIONS" {
-		Ctx.JSON(200, "Options Request!")
+		Ctx.AbortWithStatus(http.StatusNoContent)
 	}
 	Ctx.Next()
 }
-

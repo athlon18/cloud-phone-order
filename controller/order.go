@@ -47,6 +47,7 @@ func OrderSubmit(ctx *gin.Context) {
 		Num      int            `json:"num"`
 		Option   map[string]int `json:"option"`
 		Type     []string       `json:"type"`
+		Machine  string         `json:"machine"`
 	}{}
 	if err = ctx.ShouldBindJSON(&data); err != nil {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
@@ -65,6 +66,7 @@ func OrderSubmit(ctx *gin.Context) {
 		Option:   string(option),
 		Num:      data.Num,
 		CNum:     0,
+		Machine:  data.Machine,
 	}); err != nil {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
 		return

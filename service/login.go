@@ -2,12 +2,11 @@ package service
 
 import (
 	"errors"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
 	"order/common/util"
 	"order/db"
 	"order/model"
-	"time"
+	"strconv"
 )
 
 func Login(name string, password string) (user model.User, err error) {
@@ -41,12 +40,14 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 
 	userMachine = model.UserMachine{
 		UserId:    user.ID,
-		Machine:   uuid.NewV4().String(),
+		Machine:   util.Md5V1(strconv.Itoa(int(user.ID)) + machineData.MachineCode),
 		MachineId: machineData.ID,
 	}
 	tx := db.DB.Begin()
 	oldUserMachine := model.UserMachine{}
-	machineDB := tx.Model(model.UserMachine{}).Where("machine_id = ?", machineData.ID)
+	machineDB := tx.Model(model.UserMachine{}).
+		Where("machine_id = ?", machineData.ID).
+		Or("machine = ?", userMachine.Machine)
 	if err = machineDB.First(&oldUserMachine).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			if err = tx.Model(model.UserMachine{}).Create(&userMachine).Error; err != nil {
@@ -65,15 +66,15 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 	}
 
 	//处理 之前冗余数据
-	if err = tx.Model(model.Order{}).
-		Where("machine = ?", oldUserMachine.Machine).
-		Update("machine", userMachine.Machine).Error; err != nil {
-		tx.Rollback()
-		return
-	}
+	//if err = tx.Model(model.Order{}).
+	//	Where("machine = ?", oldUserMachine.Machine).
+	//	Update("machine", userMachine.Machine).Error; err != nil {
+	//	tx.Rollback()
+	//	return
+	//}
 
 	// 更新时间戳
-	if err = machineDB.Update("updated_at", time.Now()).Error; err != nil {
+	if err = machineDB.Update("machine_id", machineData.ID).Error; err != nil {
 		tx.Rollback()
 		return
 	}

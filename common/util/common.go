@@ -1,10 +1,12 @@
 package util
 
 import (
+	"crypto/md5"
 	"crypto/sha1"
 	"encoding/json"
 	"fmt"
 	"github.com/wumansgy/goEncrypt"
+	"io"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -19,6 +21,13 @@ func EncryptSha256(str string) string {
 //MDF5 512位加密
 func DecryptSha512(str string) string {
 	return goEncrypt.Sha512Hex([]byte(str))
+}
+
+func Md5V1(str string) string {
+	w := md5.New()
+	_, _ = io.WriteString(w, str)
+	md5str := fmt.Sprintf("%x", w.Sum(nil))
+	return md5str
 }
 
 func GetToken(ags ...string) string {

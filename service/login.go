@@ -84,7 +84,7 @@ func ExternalLoginRegister(name string, password, code string) (userMachine mode
 
 func GetMachineInfo(code string) (machineData model.UserMachine, err error) {
 	// 机器码发现检测
-	if err = db.DB.Model(model.UserMachine{}).Where("machine = ?", code).First(machineData).Error; err != nil {
+	if err = db.DB.Model(model.UserMachine{}).Where("machine = ?", code).First(&machineData).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return machineData, errors.New("用户机器码过期！请重新登录！")
 		}

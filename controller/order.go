@@ -53,6 +53,15 @@ func OrderSubmit(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
 		return
 	}
+	if data.Machine == "-1" {
+		machine, u := service.GetUserMachine(user.ID)
+		if u != nil {
+			ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
+			return
+		}
+		data.Machine = machine.Machine
+	}
+
 	option, _ := json.Marshal(data.Option)
 	orderId := util.GetOrderID()
 	if err = service.OrderSubmit(&model.Order{

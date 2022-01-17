@@ -5,6 +5,8 @@
     <title>文件上传</title>
 </head>
 <body>
+<a href="/api/v1/file/index">查看文件关联</a>
+<br>
 <form action="/api/v1/upload" method="post" enctype="multipart/form-data">
     <input type="file" name="f1">
     <br>
@@ -14,12 +16,14 @@
     <br>
     <input type="submit" value="上传">
 </form>
-<table>
+<table border="1">
     <thead>
     <tr>
         <th>名称</th>
         <th>地址</th>
         <th>启用</th>
+        <th>是否存在文件</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -27,8 +31,10 @@
     {{range $k, $v := .data}}
     <tr>
         <td>{{$v.Name}}</td>
-        <td>{{$v.File}}</td>
+        <td><a href="./../{{$v.File}}" target="_blank">{{$v.File}}</a></td>
         <td>{{$v.Status}}</td>
+        <td>{{$v.IsExist}}</td>
+        <td><a href="/api/v1/file/delete/{{ $v.ID }}">数据库删除</a></td>
     </tr>
     {{end}}
 

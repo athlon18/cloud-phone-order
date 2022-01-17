@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="/api/v1/html/index">查看数据库关联</a>
+<br>
+<form action="/api/v1/folder/create" method="post">
+    <input type="text" name="folder" value=""/>
+    <button type="submit">新建文件夹</button>
+</form>
+<br><br><br>
+<form action="/api/v1/upload" method="post" enctype="multipart/form-data">
+    上传文件 <input type="file" name="f1"> 选择文件夹
+    <select name="folder">
+        <option value="">根目录</option>
+        {{range $k, $v := .data}}
+        <option value="{{ $v }}">{{ $v }}</option>
+        {{ end }}
+    </select>
+    <button type="submit">上传到文件夹</button>
+</form>
+<br>
+<br>
+<form action="/api/v1/file/delete" method="post">
+    根目录下删除（如果是目录，则目录下全删）
+    <select name="file">
+        {{range $k, $v := .filelist}}
+        <option value="{{ $v }}">{{ $v }}</option>
+        {{ end }}
+    </select>
+    <button type="submit">删除</button>
+</form>
+<br>
+<br>
+<input type="button" value="返回" onclick="iframe.history.back()">
+<br>
+<iframe name="iframe" src="./../upload?_={{ .time }}"></iframe>
+</body>
+</html>

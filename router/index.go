@@ -14,7 +14,7 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	router := gin.Default()
-	router.LoadHTMLFiles("html/upload.html")
+	router.LoadHTMLFiles("html/upload.html", "html/file.html")
 	router.MaxMultipartMemory = 256
 
 	// 中间件拦截

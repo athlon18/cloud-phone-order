@@ -1,9 +1,11 @@
 package service
 
 import (
+	"io/ioutil"
 	"mime/multipart"
 	"order/db"
 	"order/model"
+	"os"
 )
 
 func UploadFile(file *multipart.FileHeader, path string, status string) {
@@ -22,11 +24,35 @@ func UploadFile(file *multipart.FileHeader, path string, status string) {
 }
 
 func File() (files []model.File) {
-	db.DB.Model(model.File{}).Find(&files)
+	if err := db.DB.Model(model.File{}).Find(&files).Error; err != nil {
+		return
+	}
+	for index, item := range files {
+		if _, err := os.Stat(item.File); err == nil {
+			files[index].IsExist = true
+		}
+	}
 	return files
 }
 
 func GetFile() (file model.File) {
-	db.DB.Model(model.File{}).Where("status = 1").First(&file)
+	if err := db.DB.Model(model.File{}).Where("status = 1").First(&file).Error; err != nil {
+		return
+	}
 	return file
+}
+
+func FileList() (list, all []interface{}) {
+	files, _ := ioutil.ReadDir("./upload")
+	for _, f := range files {
+		all = append(all, f.Name())
+		if f.IsDir() {
+			list = append(list, f.Name())
+		}
+	}
+	return
+}
+
+func DeleteFile(id string) error {
+	return db.DB.Where("id =?", id).Delete(new(model.File)).Error
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"order/common/util"
 	"order/middleware"
@@ -54,8 +55,8 @@ func OrderSubmit(ctx *gin.Context) {
 		return
 	}
 	if data.Machine == "-1" {
-		machine, u := service.GetUserMachine(user.ID)
-		if u != nil {
+		machine, err := service.GetUserMachine(user.ID)
+		if err != nil && err != gorm.ErrRecordNotFound {
 			ctx.JSON(http.StatusOK, util.Result().SetError(http.StatusInternalServerError, err.Error(), nil))
 			return
 		}

@@ -128,7 +128,13 @@ func UpdateOrder(orderId int64, status string, cnum string) error {
 
 func UpdateOrderByStatus(orderId int64, status int) (model.Order, error) {
 	order := model.Order{}
-	database := db.DB.Model(model.Order{}).Where("status != 1 and order_id  = ?", orderId)
+	database := db.DB.Model(model.Order{})
+	if status == -2 {
+		database = database.Where(" order_id  = ?", orderId)
+	} else {
+		database.Where("status != 1 and order_id  = ?", orderId)
+	}
+
 	if err := database.First(&order).Error; err != nil {
 		return order, errors.New("订单不存在，或者订单正在执行中！")
 	}
